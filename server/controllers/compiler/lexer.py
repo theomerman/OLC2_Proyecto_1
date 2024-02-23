@@ -30,7 +30,7 @@ tokens = [
 
 
     'COMPARASION',
-    'EQUALS',
+    'EQUAL',
     'DIFFERENT',
     'GREATER',
     'LESS',
@@ -40,6 +40,7 @@ tokens = [
     'AND',
     'OR',
     'NOT',
+    'TERNARY'
 
 
 ]
@@ -55,6 +56,7 @@ reserved = {
     'string': 'STRING',
     'float': 'FLOAT',
     'char': 'CHAR',
+    'bool': 'BOOL',
 
     'function': 'FUNCTION',
 
@@ -74,8 +76,29 @@ reserved = {
     'for': 'FOR',
     'of': 'OF',
 
-}
+    'push': 'PUSH',
+    'pop': 'POP',
+    'indexOf': 'INDEXOF',
+    'join': 'JOIN',
+    'length': 'LENGTH',
+    'console': 'CONSOLE',
+    'log': 'LOG',
+    'parseInt': 'PARSEINT',
+    'parseFloat': 'PARSEFLOAT',
+    'toString': 'TOSTRING',
+    'toLowerCase': 'TOLOWERCASE',
+    'toUpperCase': 'TOUPPERCASE',
+    'typeof': 'TYPEOF',
 
+    
+    'interface': 'INTERFACE',
+    'Object': 'OBJECT',
+    'keys': 'KEYS',
+    'values': 'VALUES',
+
+
+    
+}
 
 tokens = tokens + list(reserved.values())
 
@@ -97,7 +120,7 @@ t_DIVIDE  = r'\/'
 t_MOD = r'\%'
 
 t_COMPARASION = r'\=\='
-t_EQUALS = r'\='
+t_EQUAL = r'\='
 t_DIFFERENT = r'\!\='
 t_GREATER = r'\>'
 t_LESS = r'\<'
@@ -117,30 +140,30 @@ def t_ID(t):
 
 def t_COMMENT(t):
     r'\/\/.*'
-    pass
-def t_COMMENT2(t):
-    r'\/\*[\s\S]*?\*\/'
+    t.lexer.lineno += 1
     pass
 
-# A regular expression rule with some action code
-def t_NUMBER_LEX(t):
-    r'\d+'
-    t.value = int(t.value)
-    return t
+def t_COMMENT2(t):
+    r'\/\*[\s\S]*?\*\/'
+    t.lexer.lineno += t.value.count('\n')
+    pass
 
 def t_FLOAT_LEX(t):
     r'\d+\.\d+'
     t.value = float(t.value)
     return t
+def t_NUMBER_LEX(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
+
 
 def t_STRING_LEX(t):
     r'\".*\"'
-    t.type = reserved.get(t.value, 'STRING')    # Check for reserved words
     return t
 
 def t_char_LEX(t):
     r'\'[a-zA-Z0-9]\''
-    t.type = reserved.get(t.value, 'CHAR')    # Check for reserved words
     return t
 
 
@@ -173,7 +196,10 @@ def t_char_LEX(t):
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
-
+# Define a rule so we can track column numbers
+def t_column(t):
+    r'\t+'
+    t.lexer.column += len(t.value)
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t'
 
@@ -184,22 +210,3 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
-
-# Test it out
-data = '''
-3
-"hello"
-true
-hello
-'''
-
-
-# Give the lexer some input
-lexer.input(data)
-
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok:
-        break      # No more input
-    print(tok)
