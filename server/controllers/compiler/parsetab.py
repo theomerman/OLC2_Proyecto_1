@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftDIVIDETIMESAND BOOL BREAK CASE CHAR CHAR_LEX COLON COMMA COMMENT COMMENT2 COMPARASION CONSOLE CONST CONTINUE DEFAULT DIFFERENT DIVIDE DOT ELSE EQUAL FALSE FLOAT FLOAT_LEX FOR FUNCTION GREATER GREATER_EQUAL ID IF INDEXOF INTERFACE JOIN KEYS LBRACE LBRACKET LENGTH LESS LESS_EQUAL LOG LPAREN MINUS MOD NOT NULL NUMBER NUMBER_LEX OBJECT OF OR PARSEFLOAT PARSEINT PLUS POP PUSH RBRACE RBRACKET RETURN RPAREN SEMICOLON STRING STRING_LEX SWITCH TERNARY TIMES TOLOWERCASE TOSTRING TOUPPERCASE TRUE TYPEOF VALUES VAR WHILEinit : init instruction\n            | instructioninstruction  : NUMBER_LEX STRING_LEX SEMICOLON \n    '
+_lr_signature = 'leftPLUSMINUSleftDIVIDETIMESAND BOOL BREAK CASE CHAR CHAR_LEX COLON COMMA COMMENT COMMENT2 COMPARASION CONSOLE CONST CONTINUE DEFAULT DIFFERENT DIVIDE DOT ELSE EQUAL FALSE FLOAT FLOAT_LEX FOR FUNCTION GREATER GREATER_EQUAL ID IF INDEXOF INTERFACE JOIN KEYS LBRACE LBRACKET LENGTH LESS LESS_EQUAL LOG LPAREN MINUS MOD NOT NULL NUMBER NUMBER_LEX OBJECT OF OR PARSEFLOAT PARSEINT PLUS POP PUSH RBRACE RBRACKET RETURN RPAREN SEMICOLON STRING STRING_LEX SWITCH TERNARY TIMES TOLOWERCASE TOSTRING TOUPPERCASE TRUE TYPEOF VALUES VAR WHILEassignation : VAR ID COLON type EQUAL  SEMICOLON\n    init : init instruction\n            | instructiontype : NUMBER\n            | FLOAT\n            | STRING\n            | CHAR\n            | BOOLinstruction  : assignation\n    '
     
-_lr_action_items = {'NUMBER_LEX':([0,1,2,4,6,],[3,3,-2,-1,-3,]),'$end':([1,2,4,6,],[0,-2,-1,-3,]),'STRING_LEX':([3,],[5,]),'SEMICOLON':([5,],[6,]),}
+_lr_action_items = {'VAR':([0,],[2,]),'$end':([1,12,],[0,-1,]),'ID':([2,],[3,]),'COLON':([3,],[4,]),'NUMBER':([4,],[6,]),'FLOAT':([4,],[7,]),'STRING':([4,],[8,]),'CHAR':([4,],[9,]),'BOOL':([4,],[10,]),'EQUAL':([5,6,7,8,9,10,],[11,-4,-5,-6,-7,-8,]),'SEMICOLON':([11,],[12,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'init':([0,],[1,]),'instruction':([0,1,],[2,4,]),}
+_lr_goto_items = {'assignation':([0,],[1,]),'type':([4,],[5,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,8 +26,14 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> init","S'",1,None,None,None),
-  ('init -> init instruction','init',2,'p_init','parser.py',59),
-  ('init -> instruction','init',1,'p_init','parser.py',60),
-  ('instruction -> NUMBER_LEX STRING_LEX SEMICOLON','instruction',3,'p_instruction','parser.py',62),
+  ("S' -> assignation","S'",1,None,None,None),
+  ('assignation -> VAR ID COLON type EQUAL SEMICOLON','assignation',6,'p_assignation','assignation.py',20),
+  ('init -> init instruction','init',2,'p_init','parser.py',21),
+  ('init -> instruction','init',1,'p_init','parser.py',22),
+  ('type -> NUMBER','type',1,'p_type','assignation.py',24),
+  ('type -> FLOAT','type',1,'p_type','assignation.py',25),
+  ('type -> STRING','type',1,'p_type','assignation.py',26),
+  ('type -> CHAR','type',1,'p_type','assignation.py',27),
+  ('type -> BOOL','type',1,'p_type','assignation.py',28),
+  ('instruction -> assignation','instruction',1,'p_instruction','parser.py',24),
 ]

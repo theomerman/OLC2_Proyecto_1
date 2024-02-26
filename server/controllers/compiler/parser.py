@@ -1,6 +1,8 @@
 import ply.yacc as yacc
 from controllers.compiler.lexer import tokens
-from controllers.compiler.tmp.tmp import *
+from controllers.compiler.grammar.assignation import *
+# from controllers.compiler.grammar.expression import *
+# from controllers.compiler.grammar.tmp import *
 precedence = (
     # ('left', 'OR'),
     # ('left', 'AND'),
@@ -15,13 +17,13 @@ precedence = (
 
 
 
-# def p_init(p):
-#     '''init : init instruction
-#             | instruction'''
-# def p_instruction(p):
-#     '''instruction  : assignation
-#                     | error instruction
-#     '''
+def p_init(p):
+    '''init : init instruction
+            | instruction'''
+def p_instruction(p):
+    '''instruction  : assignation
+    '''
+                    # | error instruction
 
 # # declaration with type and value
 # def p_assignation(p):
@@ -64,5 +66,8 @@ precedence = (
 # def p_instruction_error(p):
 #     '''instruction  : NUMBER_LEX error SEMICOLON 
 #     '''
+
+def p_error(p):
+    print('Syntax error', p)
 
 parser = yacc.yacc()

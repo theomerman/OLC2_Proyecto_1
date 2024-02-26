@@ -1,1 +1,266 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    BREAK
+    CASE
+    CHAR_LEX
+    COMMA
+    COMMENT
+    COMMENT2
+    COMPARASION
+    CONSOLE
+    CONST
+    CONTINUE
+    DEFAULT
+    DIFFERENT
+    DIVIDE
+    DOT
+    ELSE
+    FALSE
+    FLOAT_LEX
+    FOR
+    FUNCTION
+    GREATER
+    GREATER_EQUAL
+    IF
+    INDEXOF
+    INTERFACE
+    JOIN
+    KEYS
+    LBRACE
+    LBRACKET
+    LENGTH
+    LESS
+    LESS_EQUAL
+    LOG
+    LPAREN
+    MINUS
+    MOD
+    NOT
+    NULL
+    NUMBER_LEX
+    OBJECT
+    OF
+    OR
+    PARSEFLOAT
+    PARSEINT
+    PLUS
+    POP
+    PUSH
+    RBRACE
+    RBRACKET
+    RETURN
+    RPAREN
+    STRING_LEX
+    SWITCH
+    TERNARY
+    TIMES
+    TOLOWERCASE
+    TOSTRING
+    TOUPPERCASE
+    TRUE
+    TYPEOF
+    VALUES
+    WHILE
+
+Grammar
+
+Rule 0     S' -> assignation
+Rule 1     assignation -> VAR ID COLON type EQUAL SEMICOLON
+Rule 2     init -> init instruction
+Rule 3     init -> instruction
+Rule 4     type -> NUMBER
+Rule 5     type -> FLOAT
+Rule 6     type -> STRING
+Rule 7     type -> CHAR
+Rule 8     type -> BOOL
+Rule 9     instruction -> assignation
+
+Terminals, with rules where they appear
+
+AND                  : 
+BOOL                 : 8
+BREAK                : 
+CASE                 : 
+CHAR                 : 7
+CHAR_LEX             : 
+COLON                : 1
+COMMA                : 
+COMMENT              : 
+COMMENT2             : 
+COMPARASION          : 
+CONSOLE              : 
+CONST                : 
+CONTINUE             : 
+DEFAULT              : 
+DIFFERENT            : 
+DIVIDE               : 
+DOT                  : 
+ELSE                 : 
+EQUAL                : 1
+FALSE                : 
+FLOAT                : 5
+FLOAT_LEX            : 
+FOR                  : 
+FUNCTION             : 
+GREATER              : 
+GREATER_EQUAL        : 
+ID                   : 1
+IF                   : 
+INDEXOF              : 
+INTERFACE            : 
+JOIN                 : 
+KEYS                 : 
+LBRACE               : 
+LBRACKET             : 
+LENGTH               : 
+LESS                 : 
+LESS_EQUAL           : 
+LOG                  : 
+LPAREN               : 
+MINUS                : 
+MOD                  : 
+NOT                  : 
+NULL                 : 
+NUMBER               : 4
+NUMBER_LEX           : 
+OBJECT               : 
+OF                   : 
+OR                   : 
+PARSEFLOAT           : 
+PARSEINT             : 
+PLUS                 : 
+POP                  : 
+PUSH                 : 
+RBRACE               : 
+RBRACKET             : 
+RETURN               : 
+RPAREN               : 
+SEMICOLON            : 1
+STRING               : 6
+STRING_LEX           : 
+SWITCH               : 
+TERNARY              : 
+TIMES                : 
+TOLOWERCASE          : 
+TOSTRING             : 
+TOUPPERCASE          : 
+TRUE                 : 
+TYPEOF               : 
+VALUES               : 
+VAR                  : 1
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+assignation          : 9 0
+init                 : 2
+instruction          : 2 3
+type                 : 1
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . assignation
+    (1) assignation -> . VAR ID COLON type EQUAL SEMICOLON
+
+    VAR             shift and go to state 2
+
+    assignation                    shift and go to state 1
+
+state 1
+
+    (0) S' -> assignation .
+
+
+
+state 2
+
+    (1) assignation -> VAR . ID COLON type EQUAL SEMICOLON
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) assignation -> VAR ID . COLON type EQUAL SEMICOLON
+
+    COLON           shift and go to state 4
+
+
+state 4
+
+    (1) assignation -> VAR ID COLON . type EQUAL SEMICOLON
+    (4) type -> . NUMBER
+    (5) type -> . FLOAT
+    (6) type -> . STRING
+    (7) type -> . CHAR
+    (8) type -> . BOOL
+
+    NUMBER          shift and go to state 6
+    FLOAT           shift and go to state 7
+    STRING          shift and go to state 8
+    CHAR            shift and go to state 9
+    BOOL            shift and go to state 10
+
+    type                           shift and go to state 5
+
+state 5
+
+    (1) assignation -> VAR ID COLON type . EQUAL SEMICOLON
+
+    EQUAL           shift and go to state 11
+
+
+state 6
+
+    (4) type -> NUMBER .
+
+    EQUAL           reduce using rule 4 (type -> NUMBER .)
+
+
+state 7
+
+    (5) type -> FLOAT .
+
+    EQUAL           reduce using rule 5 (type -> FLOAT .)
+
+
+state 8
+
+    (6) type -> STRING .
+
+    EQUAL           reduce using rule 6 (type -> STRING .)
+
+
+state 9
+
+    (7) type -> CHAR .
+
+    EQUAL           reduce using rule 7 (type -> CHAR .)
+
+
+state 10
+
+    (8) type -> BOOL .
+
+    EQUAL           reduce using rule 8 (type -> BOOL .)
+
+
+state 11
+
+    (1) assignation -> VAR ID COLON type EQUAL . SEMICOLON
+
+    SEMICOLON       shift and go to state 12
+
+
+state 12
+
+    (1) assignation -> VAR ID COLON type EQUAL SEMICOLON .
+
+    $end            reduce using rule 1 (assignation -> VAR ID COLON type EQUAL SEMICOLON .)
+
