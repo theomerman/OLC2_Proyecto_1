@@ -22,6 +22,8 @@ tokens = [
     'COLON',
     'COMMA',
     'DOT',
+    'PLUS_EQUAL',
+    'MINUS_EQUAL',
     'PLUS',
     'MINUS',
     'TIMES',
@@ -40,7 +42,7 @@ tokens = [
     'AND',
     'OR',
     'NOT',
-    'TERNARY'
+    'QUESTION'
 
 
 ]
@@ -113,6 +115,8 @@ t_SEMICOLON  = r'\;'
 t_COLON = r'\:'
 t_COMMA  = r'\,'
 t_DOT  = r'\.'
+t_PLUS_EQUAL = r'\+\='
+t_MINUS_EQUAL = r'\-\='
 t_PLUS  = r'\+'
 t_MINUS  = r'\-'
 t_TIMES  = r'\*'
@@ -131,7 +135,7 @@ t_AND = r'\&\&'
 t_OR = r'\|\|'
 t_NOT = r'\!'
 
-t_TERNARY = r'\?\:'
+t_QUESTION = r'\?'
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -159,10 +163,10 @@ def t_NUMBER_LEX(t):
 
 
 def t_STRING_LEX(t):
-    r'\".*\"'
+    r'"([^"\\]|\\.)*"'
     return t
 
-def t_char_LEX(t):
+def t_CHAR_LEX(t):
     r'\'[a-zA-Z0-9]\''
     return t
 

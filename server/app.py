@@ -2,6 +2,11 @@ import controllers.compiler.parser as parser
 
 parser.parser.parse(
 '''
-30.3
+interface Persona{
+    nombre: string;
+    apellido: number
+}
+x = b.b;
 '''
+
 )
