@@ -36,6 +36,11 @@ def p_if(p):
     '''if : IF LPAREN exp RPAREN block
           | IF LPAREN exp RPAREN block ELSE block
           | IF LPAREN exp RPAREN block ELSE if'''
+
+def p_if_error(p):
+    '''if : IF error '''
+    print(f"Error en el else in line {p[1].lineno}, column: {p[1].lexpos}")
+    pass
 #######################################################################
 # while
 def p_while(p):
@@ -111,7 +116,10 @@ def p_assignation4(p):
     '''assignation : ID EQUAL exp 
                    | ID PLUS_EQUAL exp 
                    | ID MINUS_EQUAL exp '''
-
+def p_assignation5(p):
+    '''assignation : VAR error 
+    '''
+    print(f"Error de asignacion line: {p[2].lineno}, column: {p[2].lexpos} ")
 #######################################################################
 # types
 def p_type(p):
@@ -169,15 +177,15 @@ def p_empty(p):
     pass
 #######################################################################
 # error
-def p_error(p):
-    if not p:
-        print("The file is empty")
-        return
-    print("Syntax error at line " + str(p.lineno) + " token " + str(p.value))
-    while True:
-        tok = parser.token()             # Get the next token
-        if not tok or tok.type == 'SEMICOLON' :
-            break
-    parser.restart()
+# def p_error(p):
+#     if not p:
+#         print("The file is empty")
+#         return
+#     print("Syntax error at line " + str(p.lineno) + " token " + str(p.value))
+#     while True:
+#         tok = parser.token()             # Get the next token
+#         if not tok or tok.type == 'SEMICOLON' :
+#             break
+#     parser.restart()
 
 parser = yacc.yacc()
