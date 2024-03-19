@@ -15,7 +15,7 @@ class Operation(Expression):
         self.line = line
         self.column = column
 
-    def run(self, ast: Ast, env: Environment):
+    def run(self, ast: Ast, env: Environment) -> Symbol:
         left = None
         right = self.right.run(ast, env)
         if self.operator not in ['--', '!']:

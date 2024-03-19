@@ -11,6 +11,8 @@ class Primitive(Expression):
         self.type = type
         self.line = line
         self.column = column
+        self.symbol = Symbol(self.line, self.column, self.value, self.type)
 
     def run(self, ast: Ast, env: Environment):
-        return Symbol(self.line, self.column, self.value, self.type)
+        # return Symbol(self.line, self.column, self.value, self.type)
+        return self.symbol

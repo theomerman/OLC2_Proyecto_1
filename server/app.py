@@ -9,13 +9,15 @@ ast = Ast()
 parser = Parser()
 
 data = '''
-var x = "hola ";
-x += "mundo";
-var y = 5.3;
-y -= 2.3;
-console.log(y);
+var x = "Hola Mundo";
+
+console.log( x.toUpperCase() );
 '''
 instuctions = parser.parse(data)
 for intruction in instuctions:
     intruction.run(ast, env)
+
+for error in ast.get_errors():
+    print(error.description)
+
 print(ast.get_console(), end='')

@@ -160,7 +160,7 @@ t_QUESTION = r'\?'
 
 
 def t_TYPES(t):
-    r'number|string|float|char|bool'
+    r'number|string|float|char|boolean'
     if t.value == 'number':
         t.value = ExpressionType.NUMBER
     elif t.value == 'string':
@@ -169,7 +169,7 @@ def t_TYPES(t):
         t.value = ExpressionType.FLOAT
     elif t.value == 'char':
         t.value = ExpressionType.CHAR
-    elif t.value == 'bool':
+    elif t.value == 'boolean':
         t.value = ExpressionType.BOOLEAN
     return t
 

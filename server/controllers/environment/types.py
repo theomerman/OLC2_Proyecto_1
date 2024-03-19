@@ -8,3 +8,4 @@ class ExpressionType(Enum):
     BOOLEAN = 3
     CHAR = 4
     NULL = 5
+    ARRAY = 6

@@ -8,29 +8,27 @@ from controllers.environment.environment import Environment
 
 
 class Declaration(Instruction):
-    def __init__(self, id, exp: Expression, type: ExpressionType, line, column) -> None:
+    def __init__(self, id: str, exp: Expression, type: ExpressionType, line, column, constant=False) -> None:
         self.id = id
         self.exp = exp
         self.type = type
         self.line = line
         self.column = column
+        self.constant = constant
 
     def run(self, ast: Ast, env: Environment):
 
         if self.exp is None:
             set_variable_no_exp(ast, env, self.id, self.type,
                                 self.line, self.column)
-            # print("declaracion sin expression")
             return
         if self.type is None:
             set_variable_no_type(
-                ast, env, self.id, self.exp, self.line, self.column)
-            # print("declaracion sin tipo")
+                ast, env, self.id, self.exp, self.line, self.column, self.constant)
             return
         else:
             set_variable(ast, env, self.id, self.exp,
-                         self.type, self.line, self.column)
-            # print("declaracion con tipo y expresion")
+                         self.type, self.line, self.column, self.constant)
 
 
 def set_variable_no_exp(ast: Ast, env: Environment, id: str, type: ExpressionType, line, column):
@@ -43,7 +41,6 @@ def set_variable_no_exp(ast: Ast, env: Environment, id: str, type: ExpressionTyp
             column
         )
         )
-        print(f"La variable \"{id}\" ya existe")
         return
     if type is ExpressionType.NUMBER:
         env.table[id] = Symbol(line, column, 0, type)
@@ -57,7 +54,7 @@ def set_variable_no_exp(ast: Ast, env: Environment, id: str, type: ExpressionTyp
         env.table[id] = Symbol(line, column, 0.0, type)
 
 
-def set_variable_no_type(ast: Ast, env: Environment, id: str, exp: Expression, line, column):
+def set_variable_no_type(ast: Ast, env: Environment, id: str, exp: Expression, line, column, constant):
     if id in env.table:
         ast.add_error(Error(
             f"La variable \"{id}\" ya existe",
@@ -67,12 +64,13 @@ def set_variable_no_type(ast: Ast, env: Environment, id: str, exp: Expression, l
             column
         )
         )
-        print(f"La variable \"{id}\" ya existe")
         return
     env.table[id] = exp.run(ast, env)
+    if constant:
+        env.table[id].constant = True
 
 
-def set_variable(ast: Ast, env: Environment, id: str, exp: Expression, type: ExpressionType, line, column):
+def set_variable(ast: Ast, env: Environment, id: str, exp: Expression, type: ExpressionType, line, column, constant):
     if id in env.table:
         ast.add_error(Error(
             f"La variable \"{id}\" ya existe",
@@ -82,9 +80,8 @@ def set_variable(ast: Ast, env: Environment, id: str, exp: Expression, type: Exp
             column
         )
         )
-        print(f"La variable \"{id}\" ya existe")
         return
-    if exp.type != type:
+    if exp.run(ast, env).type != type:
         ast.add_error(Error(
             f"No se puede asignar un tipo \"{exp.run(ast, env).type.name}\" a un \"{type.name}\"",
             env.id,
@@ -93,9 +90,8 @@ def set_variable(ast: Ast, env: Environment, id: str, exp: Expression, type: Exp
             column
         )
         )
-        print(
-            f"No se puede asignar un tipo \"{exp.run(ast, env).type.name}\" a un \"{type.name}\"")
         return
     env.table[id] = exp.run(ast, env)
-    # print(f"Se creo la variable {id} con el valor {env.table[id].value}")
+    if constant:
+        env.table[id].constant = True
     return

@@ -1,6 +1,10 @@
 from controllers.interfaces.instruction import Instruction
 from controllers.environment.environment import Environment
 from controllers.environment.ast import Ast
+from controllers.environment.symbol import Symbol
+from controllers.environment.types import ExpressionType
+
+string = ""
 
 
 class Print(Instruction):
@@ -10,8 +14,36 @@ class Print(Instruction):
         self.column = column
 
     def run(self, ast: Ast, env: Environment):
+        global string
         console = ""
         for exp in self.exps:
             value = exp.run(ast, env)
-            console += str(value.value) + " "
+            if isinstance(value, Symbol):
+                if value.type == ExpressionType.ARRAY:
+                    string = ""
+                    array_to_string(ast, env, value.value)
+                    console += string
+                else:
+                    console += str(value.value) + " "
+
+            else:
+                if value.run(ast, env).type == ExpressionType.ARRAY:
+                    string = ""
+                    array_to_string(ast, env, value.value, string)
+                    string = ""
+                else:
+                    console += str(value.run(ast, env).value) + " "
         ast.set_console(console)
+
+
+def array_to_string(ast, env, array: list):
+    global string
+    string += "["
+    for item in array:
+        if isinstance(item, list):
+            array_to_string(ast, env, item)
+        else:
+            string += str(item.run(ast, env).value) + ", "
+    if string.endswith(", "):
+        string = string[:-2]
+    string += "]"

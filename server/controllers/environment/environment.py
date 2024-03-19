@@ -42,6 +42,18 @@ class Environment:
 
     def update_variable(self, ast: Ast, id: str, operator: str, symbol: Symbol, line, column):
         if id in self.table:
+
+            if self.table[id].constant:
+                ast.add_error(Error(
+                    f"La variable \"{id}\" es constante y no se puede modificar",
+                    self.id,
+                    "Semantico",
+                    line,
+                    column
+                )
+                )
+                return
+
             if self.table[id].type != symbol.type:
                 ast.add_error(Error(
                     f"La variable \"{id}\" no es del mismo tipo",
