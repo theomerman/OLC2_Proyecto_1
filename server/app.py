@@ -9,10 +9,9 @@ ast = Ast()
 parser = Parser()
 
 data = '''
-var x = "Hola Mundo";
 
-console.log( x.toUpperCase() );
 '''
+
 instuctions = parser.parse(data)
 for intruction in instuctions:
     intruction.run(ast, env)

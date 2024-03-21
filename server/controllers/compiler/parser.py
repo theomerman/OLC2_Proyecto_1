@@ -15,6 +15,8 @@ from controllers.instructions.array_assignment import ArrayAssignment
 from controllers.instructions.push import Push
 from controllers.expressions.vector_functions import VectorFunctions
 from controllers.expressions.embed_functions import EmbedFunctions
+from controllers.instructions.if_instruction import If
+from controllers.instructions.for_instruction import For
 # from controllers.environment.environment import Environment
 # from controllers.environment.ast import Ast
 precedence = (
@@ -30,12 +32,12 @@ precedence = (
 
 
 def p_start(p):
-    '''start : init'''
+    '''start : block'''
     p[0] = p[1]
 
 
 def p_init(p):
-    '''init : init instruction
+    '''block : block instruction
             | instruction'''
     if len(p) == 3:
         p[1].append(p[2])
@@ -51,7 +53,7 @@ def p_instruction(p):
                     | declaration_matrix
                     | vector_functions
                     | interface
-                    | if
+                    | if_statement
                     | while
                     | for
                     | foreach
@@ -65,16 +67,32 @@ def p_instruction(p):
 # if
 
 
-def p_if(p):
-    '''if : IF LPAREN exp RPAREN block
-          | IF LPAREN exp RPAREN block ELSE block
-          | IF LPAREN exp RPAREN block ELSE if'''
+# def p_if(p):
+#     '''if : IF LPAREN exp RPAREN block
+#           | IF LPAREN exp RPAREN block ELSE block
+#           | IF LPAREN exp RPAREN block ELSE if'''
+
+def p_if_statement(p):
+    '''if_statement : if'''
+    p[0] = If(p[1], p.lineno(1), p.lexpos(1))
 
 
-def p_if_error(p):
-    '''if : IF error '''
-    print(f"Error en el else in line {p[1].lineno}, column: {p[1].lexpos}")
-    pass
+def p_if_1(p):
+    '''if : IF LPAREN exp RPAREN LBRACE block RBRACE ELSE if'''
+    p[0] = [[p[3], p[6]]] + p[9]
+
+
+def p_if_3(p):
+    '''if : IF LPAREN exp RPAREN LBRACE block RBRACE'''
+    p[0] = [[p[3], p[6]]]
+
+
+def p_if_2(p):
+    '''if : IF LPAREN exp RPAREN LBRACE block RBRACE ELSE LBRACE block RBRACE'''
+    p[0] = [[p[3], p[6]], [Primitive(
+        True, ExpressionType.BOOLEAN, p.lineno(1), p.lexpos(1)), p[10]]]
+
+
 #######################################################################
 # while
 
@@ -86,7 +104,9 @@ def p_while(p):
 
 
 def p_for(p):
-    '''for : FOR LPAREN declaration SEMICOLON exp SEMICOLON declaration RPAREN block'''
+    '''for : FOR LPAREN declaration exp SEMICOLON declaration RPAREN LBRACE block RBRACE'''
+    p[0] = For()
+
 #######################################################################
 # for each
 
@@ -116,8 +136,8 @@ def p_return(p):
 # block
 
 
-def p_block(p):
-    '''block : LBRACE init RBRACE'''
+# def p_block(p):
+#     '''block : LBRACE init RBRACE'''
 # def p_block2(p):
 #     '''block : LBRACE RBRACE'''
 
