@@ -4,3 +4,4 @@
 - flask
 - PLY
 - numpy
+- flask_cors

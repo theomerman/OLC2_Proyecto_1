@@ -9,3 +9,4 @@ class ExpressionType(Enum):
     CHAR = 4
     NULL = 5
     ARRAY = 6
+    INTERFACE = 7

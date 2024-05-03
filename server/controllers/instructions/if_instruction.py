@@ -12,8 +12,10 @@ class If(Instruction):
         self.column = column
 
     def run(self, ast: Ast, env: Environment):
+        if_env = Environment(env, "if")
+
         for arr in self.ctx:
-            if arr[0].run(ast, env).type != ExpressionType.BOOLEAN:
+            if arr[0].run(ast, if_env).type != ExpressionType.BOOLEAN:
                 ast.add_error(Error(
                     "La condición del if debe ser de tipo booleano",
                     env.id,
@@ -22,7 +24,8 @@ class If(Instruction):
                     self.column
                 ))
                 return
-            if arr[0].run(ast, env).value == True:
+            if arr[0].run(ast, if_env).value == True:
                 for inst in arr[1]:
-                    inst.run(ast, env)
+                    inst.run(ast, if_env)
                 break
+        ast.symbol_table.append([if_env.id,if_env.table])

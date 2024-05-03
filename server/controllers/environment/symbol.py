@@ -8,4 +8,5 @@ class Symbol:
         self.value = value
         self.constant = False
         self.array_type = ExpressionType.NULL
+        self.interface = ""
         self.type = type

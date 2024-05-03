@@ -16,7 +16,7 @@ class ArrayAssignment(Instruction):
         self.line = line
         self.column = column
 
-    def run(self, ast, env):
+    def run(self, ast:Ast, env: Environment):
         arr = env.get_variable(ast, self.id)
         if arr.type == ExpressionType.NULL:
             return arr

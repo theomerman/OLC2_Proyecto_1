@@ -12,18 +12,27 @@ import { SendToServerService } from '../services/sendToServer/send-to-server.ser
   styleUrl: './editor.component.css'
 })
 export class EditorComponent {
-  editorOptions = {theme: 'vs-dark', language: 'java'};
-  code: string= '';
-  constructor(private reveivedData: SetTextService, private sendToServer: SendToServerService) { 
+  editorOptions = { theme: 'vs-dark', language: 'typescript' };
+  code: string = '';
+  constructor(private reveivedData: SetTextService, private sendToServer: SendToServerService) {
     this.reveivedData.string$.subscribe(data => {
       this.code = data;
-    }); 
-   }
+    });
+  }
   sendCode(): void {
-    let tmp = {
-      "code": this.code
-    }
-    this.sendToServer.sendJson(tmp);
+    this.sendToServer.sendCode({ "code": this.code }).subscribe(
+      (response: any) => {
+
+        this.sendToServer.object = response;
+        console.log(response);
+        var tmp = response['console'];
+        this.sendToServer.variableSubject.next(tmp);
+      },
+      error => {
+        console.log(error);
+        // alert('There was an error sending your message' + error);
+      });
+
 
   }
 

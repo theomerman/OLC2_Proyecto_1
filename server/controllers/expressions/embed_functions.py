@@ -43,6 +43,10 @@ class EmbedFunctions(Expression):
             return toLowerCase(ast, env, exp, self.line, self.column)
         elif self.function_name == "toUpperCase":
             return toUpperCase(ast, env, exp, self.line, self.column)
+        elif self.function_name == "values":
+            return values(ast, env, exp, self.line, self.column)
+        elif self.function_name == "keys":
+            return keys(ast, env, exp, self.line, self.column)
 
 
 def parseInt(ast: Ast, env: Environment, exp: Symbol, line, column):
@@ -139,6 +143,53 @@ def toUpperCase(ast: Ast, env: Environment, exp: Symbol, line, column):
     ast.add_error(
         Error(
             f"No se puede convertir {exp.type.name} a cadena",
+            env.id,
+            "Semántico",
+            line,
+            column
+        )
+    )
+    return Primitive(ExpressionType.NULL.name, ExpressionType.NULL, line, column)
+
+
+def keys(ast: Ast, env: Environment, exp: Symbol, line, column):
+    symbol = Symbol(line, column,[],ExpressionType.ARRAY)
+    if exp.type == ExpressionType.INTERFACE:
+        for key in exp.value:
+            symbol.value.append(Primitive(key, ExpressionType.STRING, line, column))
+        return symbol
+    ast.add_error(
+        Error(
+            f"No se puede obtener las llaves de un {exp.type.name}",
+            env.id,
+            "Semántico",
+            line,
+            column
+        )
+    )
+    return Primitive(ExpressionType.NULL.name, ExpressionType.NULL, line, column)
+
+
+def values(ast: Ast, env: Environment, exp: Symbol, line, column):
+    symbol = Symbol(line, column,[],ExpressionType.ARRAY)
+    if exp.type == ExpressionType.INTERFACE:
+        for value in exp.value.values():
+            symbol.value.append(Primitive(str(value.value),ExpressionType.STRING, line, column))
+        return symbol
+        # for key in exp.value:
+        #     symbol.value.append(Primitive(key, ExpressionType.STRING, line, column))
+        # return symbol
+    # print(list(exp.value.values()))
+    # print(list(exp.value.values())[0].value)
+    # symbol = Symbol(line, column,[],ExpressionType.ARRAY)
+    # if exp.type == ExpressionType.INTERFACE:
+    #     return symbol
+    #     # for key in exp.value:
+    #     #     symbol.value.append(exp.value[key])
+    #     # return symbol
+    ast.add_error(
+        Error(
+            f"No se puede obtener los valores de un {exp.type.name}",
             env.id,
             "Semántico",
             line,

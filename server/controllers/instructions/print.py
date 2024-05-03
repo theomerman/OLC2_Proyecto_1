@@ -29,14 +29,14 @@ class Print(Instruction):
             else:
                 if value.run(ast, env).type == ExpressionType.ARRAY:
                     string = ""
-                    array_to_string(ast, env, value.value, string)
+                    array_to_string(ast, env, value.value)
                     string = ""
                 else:
                     console += str(value.run(ast, env).value) + " "
         ast.set_console(console)
 
 
-def array_to_string(ast, env, array: list):
+def array_to_string(ast: Ast, env: Environment, array: list):
     global string
     string += "["
     for item in array:

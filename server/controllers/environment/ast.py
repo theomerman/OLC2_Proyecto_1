@@ -6,6 +6,7 @@ class Ast:
         self.instructions = []
         self.console = ''
         self.errors = []
+        self.symbol_table = []
 
     def set_console(self, content):
         self.console += content + '\n'

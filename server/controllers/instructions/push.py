@@ -5,7 +5,7 @@ from controllers.environment.environment import Environment
 from controllers.environment.ast import Ast
 from controllers.environment.error import Error
 from controllers.environment.types import ExpressionType
-
+from controllers.expressions.primitive import Primitive
 
 class Push(Instruction):
     def __init__(self, id: str, value: Expression, line, column):
@@ -45,5 +45,19 @@ class Push(Instruction):
                     self.column
                 )
             )
-        arr.value.append(self.value)
+
+
+
+        # for item in arr.value:
+        #     print(item.run(ast, env).value)
+
+        # print("---------------------")
+        new_value = Primitive(self.value.run(ast, env).value,self.value.run(ast,env).type,self.line, self.column)
+        arr.value.append(new_value)
+
+
+
+        # for item in arr.value:
+        #     print(item.run(ast, env).value)
+
         # arr.value.insert(arr.value[-1], self.value)

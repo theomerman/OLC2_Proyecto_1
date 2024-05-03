@@ -1,6 +1,6 @@
 .buttons {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 30px;
   padding: 10px;
 }
